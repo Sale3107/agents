@@ -1,16 +1,8 @@
 ArrayList<Location> locations = new ArrayList<Location>();
 int initalLocationSize = 10;
 
-int initialAgentSize = 9;
-int initialCivSize = 9;
-int initialEnemySize = 9;
-
-ArrayList<Agent> agents = new ArrayList<Agent>();
-ArrayList<Civilian> civilians = new ArrayList<Civilian>();
-ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-
 ArrayList<Person> people = new ArrayList<Person>();
-int initialPeopleSize = initialAgentSize + initialCivSize + initialEnemySize;
+int initialPeopleSize = 0;
 
 String[] names = {
   "Madrid", "Porto", "Tokyo", "Washington D.C", "Shanghai", "Moscow", "Quebec", "Ottowa",
@@ -54,32 +46,18 @@ void setup() {
   
   //generate trade routes
   for (int i = 0; i < locations.size(); i++) {
-    locations.get(i).setTraders(generateTradeRoutes(locations, locations.get(i)));
+    locations.get(i).setTradeRoutes(generateTradeRoutes(locations, locations.get(i)));
   }
   
   //assign agents to locations
+  /*
   for (int i = 0; i < initialAgentSize; i++) {
     int random_number = int(random(locations.size()));
     agents.add(new Agent("agent" + str(i)));
     people.add(agents.get(i));
     locations.get(random_number).assign_person(agents.get(i));
   }
-  
-  //assign civilians to locations
-  for (int i = 0; i < initialCivSize; i++) {
-    int random_number = int(random(locations.size()));
-    civilians.add(new Civilian("civilian" + str(i)));
-    people.add(civilians.get(i));
-    locations.get(random_number).assign_person(civilians.get(i));
-  }
-  
-  //assign enemies to locations
-  for (int i = 0; i < initialEnemySize; i++) {
-    int random_number = int(random(locations.size()));
-    enemies.add(new Enemy("enemy" + str(i)));
-    people.add(enemies.get(i));
-    locations.get(random_number).assign_person(enemies.get(i));
-  }
+  */
   
   Trader t = new Trader("Trader", locations.get(0));
   people.add(t);
@@ -90,7 +68,7 @@ void draw() {
   
   if (millis() > time1 + 1000)
   {
-    transferAgents();
+    transferPeople();
     time1 = millis();
   }
 
@@ -113,17 +91,6 @@ void draw() {
     
     selectedLocation.singleDisplay();
     selectedLocation.displayTradeRoutes();
-    
-  } else if (mode == "AGENT") {
-    
-    textAlign(LEFT);
-    textSize(80);
-    stroke(245);
-    text("agents: ", 100, 100);
-    for (int i = 0; i < agents.size(); i++) {
-      PVector displayPos = new PVector(100, 200 + (i * 50));
-      agents.get(i).display(displayPos, 40);
-    }
     
   } else if (mode == "NEWLOC") {
     
@@ -194,15 +161,7 @@ void mouseClicked() {
 }
 
 void keyPressed() {  //This is fucking stupid and i hate it.
-  if (mode == "SINGLE"){
-    if (((key == '1'))){
-      createAgent(selectedLocation);
-    } else if (key == '2'){
-      createCivilian(selectedLocation);
-    } else if (key == '3'){
-      createEnemy(selectedLocation);
-    } 
-  } else if (mode == "CREATE"){  
+  if (mode == "CREATE"){  
     createdName += key;
   } else if (mode == "MAP"){
     if (key == '0'){
@@ -210,44 +169,16 @@ void keyPressed() {  //This is fucking stupid and i hate it.
     }
   }
   
-   if ((mode != "CREATE")){
-      if (key == 'm' || key == 'M') {
-        mode = "MAP";
-      } else if (key == 'a' || key == 'A') {
-        mode = "AGENT";
-      }
-   }
-  
-}
-/*
-void transferAgents() {  //Agent Transferring Manager
-  for (int i = 0; i < locations.size(); i++) {  //Loop through every location.
-    if (int(random(0, 2)) == 1) {  //Random chance that it will lose a person.
-      if (locations.get(i).traders.size() > 0) {  //Check if it has any available trade routes
-        int amountOfPeople = int(random(0, 3));  //Generate amount of people to get, then Check if it has enough people.
-        if (locations.get(i).current_people.size() > amountOfPeople) {  //If it does then:  
-          for (int peopleCount = 0; peopleCount < amountOfPeople; peopleCount++) {
-            
-            //Generate a random person from current location's 'current_people' list.
-            Person newPerson = locations.get(i).current_people.get(int(random(0, locations.get(i).current_people.size())));
-            
-            //Generate the new location from the trade route options.
-            int randomLocation = int(random(0, locations.get(i).traders.size()));
-            Location newLocation = locations.get(i).traders.get(randomLocation);
-            
-            //Tell the person it is transferring.
-            newPerson.startTransfer(locations.get(i), newLocation);        
-            locations.get(i).remove_person(newPerson);
-            
-          }            
-        }
-      }
+  if ((mode != "CREATE")){
+    if (key == 'm' || key == 'M') {
+      mode = "MAP";
+    } else if (key == 'a' || key == 'A') {
+      mode = "AGENT";
     }
   }
 }
-*/
 
-void transferAgents() {
+void transferPeople() {
   for (int i = 0; i < people.size(); i++) {
     Optional<Location> l = people.get(i).shouldTransfer();
     
@@ -265,7 +196,7 @@ void drawLines() {
       for (int t = 0; t < locations.size(); t++) {  // if it is, then loop through the rest of the locations,
         float d = dist(locations.get(i).position.x, locations.get(i).position.y, locations.get(t).position.x, locations.get(t).position.y); // generate distance between the 2 places.
         if (!(t == i)) {  //check if the location is itself.
-          if (locations.get(i).traders.contains(locations.get(t))){  //and check if it is a trade route.
+          if (locations.get(i).tradeRoutes.contains(locations.get(t))){  //and check if it is a trade route.
             stroke(190, 90, 70, 255);  //if it is, then use these display colours.
             strokeWeight(3);
           } else if (d <= 750) {
@@ -288,7 +219,7 @@ void drawLines() {
     for (int k = i + 1; k < locations.size(); k++){
       float d = dist(locations.get(i).getX(), locations.get(i).getY(), locations.get(k).getX(), locations.get(k).getY());
       if (d <= 750) {
-        if (locations.get(i).traders.contains(locations.get(k))){
+        if (locations.get(i).tradeRoutes.contains(locations.get(k))){
           stroke(190, 90, 70, 40);  //if it is, then use these display colours.
           strokeWeight(1);
         } else {
@@ -302,40 +233,18 @@ void drawLines() {
  }
 }
 
-void createAgent(Location loc){
-  Agent newAgent = new Agent("agent" + agents.size());
-  agents.add(newAgent);
-  people.add(newAgent);
-  loc.assign_person(newAgent);
-}
-
-void createCivilian(Location loc){
-  Civilian newCiv = new Civilian("civilian" + (agents.size()));
-  civilians.add(newCiv);
-  people.add(newCiv);
-  loc.assign_person(newCiv);
-}
-
-void createEnemy(Location loc){
-  Enemy newEnemy = new Enemy("enemy" + (agents.size()));
-  enemies.add(newEnemy);
-  people.add(newEnemy);
-  loc.assign_person(newEnemy);
-}
-
 void removeLocation(Location loc){
+  if (loc.tradeRoutes.size() == 0) {
+    return; 
+  }
   locations.remove(locations.indexOf(loc));
   
   loc.exists = false;
   
   //Remove trade reference from other nodes
-  for (int i = 0; i < loc.traders.size(); i++) {
-    Location traderReference = loc.traders.get(i); 
-    traderReference.traders.remove(traderReference.traders.indexOf(loc));
-  }
-  
-  if (loc.traders.size() == 0) {
-    return; 
+  for (int i = 0; i < loc.tradeRoutes.size(); i++) {
+    Location traderReference = loc.tradeRoutes.get(i); 
+    traderReference.tradeRoutes.remove(traderReference.tradeRoutes.indexOf(loc));
   }
   
   //Transfer people through trade routes
@@ -357,7 +266,7 @@ void createNewLocation(PVector position, String name){  //Click '0' to start the
   locations.add(newLocation);
   
   for (int i = 0; i < locations.size(); i++){
-    locations.get(i).setTraders(generateTradeRoutes(locations, locations.get(i)));
+    locations.get(i).setTradeRoutes(generateTradeRoutes(locations, locations.get(i)));
   }
   
 }
