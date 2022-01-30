@@ -32,7 +32,7 @@ class Person {
     return p_location;
   }
   
-  void setLocation(Location newLocation) {
+  void setPLocation(Location newLocation) {
     p_location = newLocation;
   }
   
@@ -82,7 +82,17 @@ class Person {
     
     if (transferProgress >= 1 - increment) {
       isTransferring = false;
-      newLocation.assign_person(this);  //Assign this object to it's new location when it arrives there.
+      if (newLocation.exists) {
+        newLocation.assign_person(this);
+      } else {
+        if (oldLocation.exists) {
+          startTransfer(newLocation, oldLocation);
+        }
+        else {
+          startTransfer(newLocation, oldLocation.traders.get(floor(random(0, oldLocation.traders.size() - 1))));
+        }
+        
+      }
     }
     
   }

@@ -12,6 +12,8 @@ class Location {
   ArrayList<Person> current_people = new ArrayList<Person>();
   ArrayList<Location> traders = new ArrayList<Location>();
   
+  boolean exists = true;
+  
   Location (String tempname, PVector temppos, int temppopulation, int initialwealth, boolean t_isTown) {
     name = tempname;
     position = temppos;
@@ -171,7 +173,7 @@ class Location {
   
   void assign_person(Person agent) {
     current_people.add(agent);
-    agent.setLocation(this);
+    agent.setPLocation(this);
   }
   
   void remove_person(Person agent) {
