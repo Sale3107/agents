@@ -11,7 +11,6 @@ class Location {
   
   ArrayList<Person> current_people = new ArrayList<Person>();
   ArrayList<Location> tradeRoutes = new ArrayList<Location>();
-  ArrayList<Trader> traders = new ArrayList<Trader>();
   
   boolean exists = true;
   
