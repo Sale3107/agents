@@ -1,8 +1,6 @@
 ArrayList<Location> locations = new ArrayList<Location>();
 int initalLocationSize = 10;
 
-//Person[] people;
-
 int initialAgentSize = 9;
 int initialCivSize = 9;
 int initialEnemySize = 9;
