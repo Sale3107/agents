@@ -20,6 +20,8 @@ Location selectedLocation;
 int time1;
 int timer2;
 
+String gay = "among us";
+
 void setup() {
   background(66, 69, 56);
   fullScreen();
