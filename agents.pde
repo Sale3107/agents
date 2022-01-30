@@ -311,6 +311,11 @@ void createEnemy(Location loc){
 }
 
 void removeLocation(Location loc){
+  //if the location is the last locaiton
+  if (locations.size() == 1) {
+    return;
+  }
+  
   locations.remove(locations.indexOf(loc));
   
   loc.exists = false;
@@ -321,8 +326,12 @@ void removeLocation(Location loc){
     traderReference.traders.remove(traderReference.traders.indexOf(loc));
   }
   
+  //if there are no remaining traders
   if (loc.traders.size() == 0) {
-    return; 
+    for (int i = 0; i < loc.current_people.size(); i++) {
+      loc.current_people.get(i).startTransfer(loc, locations.get(floor(random(0, locations.size()))));
+    }
+    return;
   }
   
   //Transfer people through trade routes
