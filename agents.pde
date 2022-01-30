@@ -8,6 +8,8 @@ Enemy[] enemies;
 
 PVector newPos;
 
+String amongus;
+
 String[] names = {
   "Madrid", "Porto", "Tokyo", "Washington D.C", "Shanghai", "Moscow", "Quebec", "Ottowa",
   "Dublin", "Paris", "Berlin", "Rome", "London", "Reikjavik", "Athens", "Sydney","Oslo",
