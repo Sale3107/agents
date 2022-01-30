@@ -168,9 +168,14 @@ void mouseClicked() {
   if (mode == "MAP") {
     for (int i = 0; i < locations.size(); i ++){
       if (locations.get(i).checkIfMouseOver()){
-        println("Mouse has been clicked on: " + locations.get(i).name);
-        selectedLocation = locations.get(i);
-        mode = "SINGLE";
+        if (mouseButton == LEFT){
+          println("Mouse has been clicked on: " + locations.get(i).name);
+          selectedLocation = locations.get(i);
+          mode = "SINGLE";
+        } else if (mouseButton == RIGHT){
+          removeLocation(locations.get(i));
+        }
+        
       }
     }
   } else if (mode == "NEWLOC"){
@@ -305,6 +310,10 @@ void createEnemy(Location loc){
   enemies.add(newEnemy);
   people.add(newEnemy);
   loc.assign_person(newEnemy);
+}
+
+void removeLocation(Location loc){
+  locations.remove(locations.indexOf(loc));
 }
 
 void createNewLocation(PVector position, String name){  //Click '0' to start the new location mode, then click anywhere on the screen. Then, type the name and click again.
