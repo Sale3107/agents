@@ -36,6 +36,10 @@ class Person {
     p_location = newLocation;
   }
   
+  void update() {
+  
+  }
+  
   void display(PVector render_position, int size) {
     strokeWeight(1);
     fill(displaycolour);
