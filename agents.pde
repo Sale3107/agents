@@ -34,8 +34,8 @@ void setup() {
   time1 = millis();
   
   //generate a field of evenly distributed points and assign the laocitons to towns
-  ArrayList<PVector> distributedPoints = generatePoints(locations.length, width - 250,  height - 250);
-  for (int i  = 0; i < distributedPoints.size(); i++) {
+  ArrayList<PVector> distributedPoints = generatePoints(initalLocationSize, width - 250,  height - 250);
+  for (int i  = 0; i < initalLocationSize; i++) {
     PVector currentPoint = distributedPoints.get(i);
     currentPoint.add(new PVector(125, 125));
   }
