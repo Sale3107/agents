@@ -97,4 +97,9 @@ class Person {
     
   }
 
+  Optional<Location> shouldTransfer()
+  {
+    return new Optional<Location>();
+  }
+
 }
