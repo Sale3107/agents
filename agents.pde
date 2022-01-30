@@ -314,6 +314,11 @@ void createEnemy(Location loc){
 
 void removeLocation(Location loc){
   locations.remove(locations.indexOf(loc));
+  
+  for (int i = 0; i < loc.traders.size(); i++) {
+    Location traderReference = loc.traders.get(i); 
+    traderReference.traders.remove(traderReference.traders.indexOf(loc));
+  }
 }
 
 void createNewLocation(PVector position, String name){  //Click '0' to start the new location mode, then click anywhere on the screen. Then, type the name and click again.
