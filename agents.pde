@@ -217,7 +217,7 @@ void keyPressed() {  //This is fucking stupid and i hate it.
    }
   
 }
-
+/*
 void transferAgents() {  //Agent Transferring Manager
   for (int i = 0; i < locations.size(); i++) {  //Loop through every location.
     if (int(random(0, 2)) == 1) {  //Random chance that it will lose a person.
@@ -240,6 +240,17 @@ void transferAgents() {  //Agent Transferring Manager
           }            
         }
       }
+    }
+  }
+}
+*/
+
+void transferAgents() {
+  for (int i = 0; i < people.size(); i++) {
+    Optional<Location> l = people.get(i).shouldTransfer();
+    
+    if (l.hasValue) {
+      people.get(i).startTransfer(people.get(i).newLocation, l.value);
     }
   }
 }
