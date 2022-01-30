@@ -315,9 +315,20 @@ void createEnemy(Location loc){
 void removeLocation(Location loc){
   locations.remove(locations.indexOf(loc));
   
+  //Remove trade reference from other nodes
   for (int i = 0; i < loc.traders.size(); i++) {
     Location traderReference = loc.traders.get(i); 
     traderReference.traders.remove(traderReference.traders.indexOf(loc));
+  }
+  
+  if (loc.traders.size() == 0) {
+    return; 
+  }
+  
+  //Transfer people through trade routes
+  for (int i =0; i < loc.current_people.size(); i++) {
+    Location targetLocation = loc.traders.get(round(random(0, loc.traders.size() - 1)));
+    loc.current_people.get(i).startTransfer(loc, targetLocation);
   }
 }
 
