@@ -48,6 +48,8 @@ void setup() {
   for (int i = 0; i < locations.size(); i++) {
     locations.get(i).setTradeRoutes(generateRoutes(locations, locations.get(i), 500));
     locations.get(i).setConnections(generateRoutes(locations, locations.get(i), 750));
+    locations.get(i).setSailRoute(findSailRoute(locations.get(i)));
+    
     
     if(locations.get(i).tradeRoutes.size() > 0){
       for (int k = 0; k < locations.get(i).tradeRoutes.size(); k++){
@@ -64,6 +66,10 @@ void setup() {
         locations.get(i).assign_person(tv);
       }
     }
+    
+    Sailor s = new Sailor(locations.get(i).name + " Sailor", locations.get(i));
+    people.add(s);
+    locations.get(i).assign_person(s);
     
   }
 }
@@ -207,19 +213,25 @@ void drawLines() {
           if (locations.get(i).tradeRoutes.contains(locations.get(t))){  //and check if it is a trade route.
             stroke(190, 90, 70, 255);  //if it is, then use these display colours.
             strokeWeight(3);
-          } else if (d <= 750) {
+          } else if (locations.get(i).connections.contains(locations.get(t))) {
             stroke(230, 175, 150);
             strokeWeight(2);
           } else {
             stroke(180, 150);  //if not, then use these default ones.
             strokeWeight(1);
           }
+          float mx = (locations.get(i).position.x + locations.get(t).position.x) / 2;
+          float my = (locations.get(i).position.y + locations.get(t).position.y) / 2;
+          if(locations.get(i).sailRoute == locations.get(t)){
+            strokeWeight(4);
+            stroke(100, 160, 225);
+            line(locations.get(i).position.x, locations.get(i).position.y, locations.get(t).position.x, locations.get(t).position.y);
+          }
           line(locations.get(i).position.x, locations.get(i).position.y, locations.get(t).position.x, locations.get(t).position.y);
           fill(25);
           textSize(10);
-          float x = (locations.get(i).position.x + locations.get(t).position.x) / 2;
-          float y = (locations.get(i).position.y + locations.get(t).position.y) / 2;
-          text(d, x, y);
+          
+          text(d, mx, my);
         }
       }
     }
@@ -351,6 +363,20 @@ ArrayList<Location> generateRoutes(ArrayList<Location> all_locations, Location c
   
 }
 
+Location findSailRoute(Location currentLocation){
+  for(int i = 0; i < locations.size(); i++){
+    Location otherLocation = locations.get(i);
+    if (currentLocation != otherLocation){
+      float d = dist(currentLocation.position.x, currentLocation.position.y, otherLocation.position.x, otherLocation.position.y);
+      if (d >= 900) {
+        return otherLocation;
+      }
+    }
+  }
+  
+  return currentLocation.connections.get(floor(random(0, currentLocation.connections.size())));
+    
+}
 
 
     
