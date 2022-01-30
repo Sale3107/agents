@@ -49,8 +49,7 @@ void setup() {
     } else {
       isTown = false;
     }
-    String name = names[floor(random(0, names.length))];
-    locations.add(new Location(name, distributedPoints.get(i), round(random(500, 1200)), i, isTown));
+    locations.add(new Location(names[i], distributedPoints.get(i), round(random(500, 1200)), i, isTown));
   }
   
   //generate trade routes
