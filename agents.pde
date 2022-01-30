@@ -8,8 +8,6 @@ Enemy[] enemies;
 
 PVector newPos;
 
-String amongus;
-
 String[] names = {
   "Madrid", "Porto", "Tokyo", "Washington D.C", "Shanghai", "Moscow", "Quebec", "Ottowa",
   "Dublin", "Paris", "Berlin", "Rome", "London", "Reikjavik", "Athens", "Sydney","Oslo",
@@ -20,7 +18,6 @@ String mode = "MAP";
 float increment = 0.02;
 Location selectedLocation;
 int time1;
-int timer2;
 
 void setup() {
   background(66, 69, 56);
@@ -95,18 +92,13 @@ void draw() {
   {
     transferAgents();
     time1 = millis();
-  } 
-  
-  if(millis() > timer2 + 1000) {
-    //transferResources();
-    timer2 = millis();
   }
 
   background(69, 71, 57);
   if (mode == "MAP") {
-    //drawRelationships();
+
     drawLines();
-    //drawLinesFromLineList();
+
     for (int i = 0; i < people.length; i++) {
       if (people[i].isTransferring) {
         people[i].displayTransfer();
