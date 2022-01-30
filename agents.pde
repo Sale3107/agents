@@ -237,7 +237,7 @@ void transferAgents() {  //Agent Transferring Manager
             
             //Tell the person it is transferring.
             newPerson.startTransfer(locations.get(i), newLocation);        
-            locations.get(i).remove_person(newPerson);  
+            locations.get(i).remove_person(newPerson);
             
           }            
         }
@@ -318,15 +318,19 @@ void removeLocation(Location loc){
 
 void createNewLocation(PVector position, String name){  //Click '0' to start the new location mode, then click anywhere on the screen. Then, type the name and click again.
   int p = round(random(500, 1200));
-    boolean isTown;
-    if (p < 700) {
-       isTown = true;
-    } else {
-      isTown = false;
-    }
+  boolean isTown;
+  if (p < 700) {
+     isTown = true;
+  } else {
+    isTown = false;
+  }
   Location newLocation = new Location(name, position, p, locations.size(), isTown);
-  newLocation.setTraders(generateTradeRoutes(locations, newLocation));
   locations.add(newLocation);
+  
+  for (int i = 0; i < locations.size(); i++){
+    locations.get(i).setTraders(generateTradeRoutes(locations, locations.get(i)));
+  }
+  
 }
 
 boolean mouseInValidPlace(){
