@@ -46,14 +46,25 @@ void setup() {
   
   //generate trade routes
   for (int i = 0; i < locations.size(); i++) {
-    locations.get(i).setTradeRoutes(generateTradeRoutes(locations, locations.get(i)));
+    locations.get(i).setTradeRoutes(generateRoutes(locations, locations.get(i), 500));
+    locations.get(i).setConnections(generateRoutes(locations, locations.get(i), 750));
+    
     if(locations.get(i).tradeRoutes.size() > 0){
       for (int k = 0; k < locations.get(i).tradeRoutes.size(); k++){
-        Trader t = new Trader(locations.get(i).name + "Trader", locations.get(i));
+        Trader t = new Trader(locations.get(i).name + " Trader", locations.get(i));
         people.add(t);
         locations.get(i).assign_person(t);
       }
     }
+    
+    if(locations.get(i).connections.size() > 0){
+      for(int k = 0; k < 3; k++){
+        Traveller tv = new Traveller(locations.get(i).name + " Traveller", locations.get(i));
+        people.add(tv);
+        locations.get(i).assign_person(tv);
+      }
+    }
+    
   }
 }
 
@@ -263,7 +274,7 @@ void createNewLocation(PVector position, String name){  //Click '0' to start the
   locations.add(newLocation);
   
   for (int i = 0; i < locations.size(); i++){
-    locations.get(i).setTradeRoutes(generateTradeRoutes(locations, locations.get(i)));
+    locations.get(i).setTradeRoutes(generateRoutes(locations, locations.get(i), 500));
   }
   
 }
@@ -324,21 +335,22 @@ ArrayList<PVector> generatePoints(int amount, int canvasWidth, int canvasHeight)
     return points;
 }
 
-ArrayList<Location> generateTradeRoutes(ArrayList<Location> all_locations, Location currentLocation) {
-  ArrayList<Location> traders = new ArrayList<Location>();
+ArrayList<Location> generateRoutes(ArrayList<Location> all_locations, Location currentLocation, int threshold) {
+  ArrayList<Location> routes = new ArrayList<Location>();
   for (int i = 0; i < all_locations.size(); i++){
     Location otherLocation = all_locations.get(i);
     if (currentLocation != otherLocation){
       float d = dist(currentLocation.position.x, currentLocation.position.y, otherLocation.position.x, otherLocation.position.y);
-      if (d <= 500) {
-        traders.add(otherLocation);
+      if (d <= threshold) {
+        routes.add(otherLocation);
       }
     }
   }
   
-  return traders;
+  return routes;
   
 }
+
 
 
     

@@ -11,6 +11,7 @@ class Location {
   
   ArrayList<Person> current_people = new ArrayList<Person>();
   ArrayList<Location> tradeRoutes = new ArrayList<Location>();
+  ArrayList<Location> connections = new ArrayList<Location>();
   
   boolean exists = true;
   
@@ -29,6 +30,10 @@ class Location {
   
   void setTradeRoutes(ArrayList<Location> temp_traders) {
     tradeRoutes = temp_traders;
+  }
+  
+  void setConnections(ArrayList<Location> temp_connections){
+    connections = temp_connections;
   }
   
   float getX() {

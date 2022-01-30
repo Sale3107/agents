@@ -73,10 +73,10 @@ class Person {
     if ((oldLocation.checkIfMouseOver()) || (newLocation.checkIfMouseOver())) {
       stroke(10);
       strokeWeight(0.5);
-      fill(235, 255);
+      fill(displaycolour);
       size = 10;
     } else {
-      fill(190, 60);
+      fill(displaycolour + color(10, 10, 10, 40));
     }
     
     ellipse(circlePos.x, circlePos.y, size, size);
