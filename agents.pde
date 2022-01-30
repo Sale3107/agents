@@ -24,7 +24,6 @@ void setup() {
   fullScreen();
   
   time1 = millis();
-  timer2 = millis();
   
   locations = new Location[12];
   
