@@ -32,7 +32,7 @@ class Person {
     return p_location;
   }
   
-  void setLocation(Location newLocation) {
+  void setPLocation(Location newLocation) {
     p_location = newLocation;
   }
   

@@ -171,7 +171,7 @@ class Location {
   
   void assign_person(Person agent) {
     current_people.add(agent);
-    agent.setLocation(this);
+    agent.setPLocation(this);
   }
   
   void remove_person(Person agent) {

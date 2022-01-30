@@ -1,5 +1,5 @@
 ArrayList<Location> locations = new ArrayList<Location>();
-int initalLocationSize = 9;
+int initalLocationSize = 10;
 
 //Person[] people;
 
@@ -20,12 +20,14 @@ String[] names = {
   "Copenhagen", "Stockholm", "Innsbruck", "Lisbon",
 };
 
+String createdName = "";
+PVector locPos;
+
 String mode = "MAP";
 float increment = 0.02;
 Location selectedLocation;
 int time1;
 
-String gay = "among us";
 
 void setup() {
   background(66, 69, 56);
@@ -49,7 +51,7 @@ void setup() {
     } else {
       isTown = false;
     }
-    locations.add(new Location(names[i], distributedPoints.get(i), round(random(500, 1200)), i, isTown));
+    locations.add(new Location(names[i], distributedPoints.get(i), p, i, isTown));
   }
   
   //generate trade routes
@@ -108,9 +110,12 @@ void draw() {
     }
     
   } else if (mode == "SINGLE") {
+    
     selectedLocation.singleDisplay();
     selectedLocation.displayTradeRoutes();
+    
   } else if (mode == "AGENT") {
+    
     textAlign(LEFT);
     textSize(80);
     stroke(245);
@@ -119,6 +124,43 @@ void draw() {
       PVector displayPos = new PVector(100, 200 + (i * 50));
       agents.get(i).display(displayPos, 40);
     }
+    
+  } else if (mode == "NEWLOC") {
+    
+    for (int i = 0; i < locations.size(); i++) {
+      stroke(190, 20);
+      strokeWeight(0.5);
+      line(mouseX, mouseY, locations.get(i).position.x, locations.get(i).position.y);
+      locations.get(i).mapDisplay();
+    }
+    
+    ellipseMode(CENTER);
+    stroke(110);
+    strokeWeight(2.5);
+    if (mouseInValidPlace()){
+      fill(100, 250, 90);
+    } else {
+      fill(250, 90, 90);
+    }
+    ellipse(mouseX, mouseY, 24, 24);
+    
+  } else if (mode == "CREATE") {
+    for (int i = 0; i < locations.size(); i++) {
+      stroke(190, 20);
+      strokeWeight(0.5);
+      line(locPos.x, locPos.y, locations.get(i).position.x, locations.get(i).position.y);
+      locations.get(i).mapDisplay();
+    }
+    
+    fill(140, 150, 145, 220);
+    stroke(20);
+    strokeWeight(2);
+    ellipse(locPos.x, locPos.y, 24, 24);
+    
+    fill(210, 200);
+    textSize(25);
+    text(createdName, locPos.x, locPos.y + 30);
+    
   }
 }
 
@@ -131,16 +173,47 @@ void mouseClicked() {
         mode = "SINGLE";
       }
     }
+  } else if (mode == "NEWLOC"){
+    if (mouseInValidPlace()){
+      locPos = new PVector(mouseX, mouseY);
+      mode = "CREATE";
+    } else {
+      println("Location in invalid position.");
+    }
+    
+  } else if (mode == "CREATE"){
+    createNewLocation(locPos, createdName);
+    createdName = "";
+    mode = "MAP";
   }
 }
 
-void keyPressed() {
-  if (key == 'm' || key == 'M') {
-    mode = "MAP";
-  } else if (key == 'a' || key == 'A') {
-      mode = "AGENT";
+void keyPressed() {  //This is fucking stupid and i hate it.
+  if (mode == "SINGLE"){
+    if (((key == '1'))){
+      createAgent(selectedLocation);
+    } else if (key == '2'){
+      createCivilian(selectedLocation);
+    } else if (key == '3'){
+      createEnemy(selectedLocation);
+    } 
+  } else if (mode == "CREATE"){  
+    createdName += key;
+  } else if (mode == "MAP"){
+    if (key == '0'){
+      mode = "NEWLOC";
     }
   }
+  
+   if ((mode != "CREATE")){
+      if (key == 'm' || key == 'M') {
+        mode = "MAP";
+      } else if (key == 'a' || key == 'A') {
+        mode = "AGENT";
+      }
+   }
+  
+}
 
 void transferAgents() {  //Agent Transferring Manager
   for (int i = 0; i < locations.size(); i++) {  //Loop through every location.
@@ -213,7 +286,50 @@ void drawLines() {
  }
 }
 
+void createAgent(Location loc){
+  Agent newAgent = new Agent("agent" + agents.size());
+  agents.add(newAgent);
+  people.add(newAgent);
+  loc.assign_person(newAgent);
+}
 
+void createCivilian(Location loc){
+  Civilian newCiv = new Civilian("civilian" + (agents.size()));
+  civilians.add(newCiv);
+  people.add(newCiv);
+  loc.assign_person(newCiv);
+}
+
+void createEnemy(Location loc){
+  Enemy newEnemy = new Enemy("enemy" + (agents.size()));
+  enemies.add(newEnemy);
+  people.add(newEnemy);
+  loc.assign_person(newEnemy);
+}
+
+void createNewLocation(PVector position, String name){  //Click '0' to start the new location mode, then click anywhere on the screen. Then, type the name and click again.
+  int p = round(random(500, 1200));
+    boolean isTown;
+    if (p < 700) {
+       isTown = true;
+    } else {
+      isTown = false;
+    }
+  Location newLocation = new Location(name, position, p, locations.size(), isTown);
+  newLocation.setTraders(generateTradeRoutes(locations, newLocation));
+  locations.add(newLocation);
+}
+
+boolean mouseInValidPlace(){
+  for (int i = 0; i < locations.size(); i++) {
+      if (locations.get(i).checkIfMouseOver()){
+        return false;
+      }
+    }
+  
+  return true;
+  
+}
 
 ArrayList<PVector> generatePoints(int amount, int canvasWidth, int canvasHeight)
 {
