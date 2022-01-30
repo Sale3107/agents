@@ -37,12 +37,14 @@ void setup() {
   
   people = new Person[agents.length + civilians.length + enemies.length];
   
+  //generate a field of evenly distributed points and assign the laocitons to towns
   ArrayList<PVector> distributedPoints = generatePoints(locations.length, width - 250,  height - 250);
   for (int i  = 0; i < distributedPoints.size(); i++) {
     PVector currentPoint = distributedPoints.get(i);
     currentPoint.add(new PVector(125, 125));
   }
   
+  //Create towns and assign properties
   for (int i = 0; i < locations.length; i++) {
     int p = round(random(500, 1200));
     boolean isTown;
@@ -55,11 +57,12 @@ void setup() {
     locations[i] = new Location(name, distributedPoints.get(i), round(random(500, 1200)), i, isTown);
   }
   
+  //generate trade routes
   for (int i = 0; i < locations.length; i++) {
     locations[i].setTraders(generateTradeRoutes(locations, locations[i]));
   }
   
-  
+  //assign agents to locations
   for (int i = 0; i < agents.length; i++) {
     int random_number = int(random(locations.length));
     agents[i] = new Agent("agent" + str(i));
@@ -67,6 +70,7 @@ void setup() {
     locations[random_number].assign_person(agents[i]);
   }
   
+  //assign civilians to locations
   for (int i = 0; i < civilians.length; i++) {
     int random_number = int(random(locations.length));
     civilians[i] = new Civilian("civilian" + str(i));
@@ -74,6 +78,7 @@ void setup() {
     locations[random_number].assign_person(civilians[i]);
   }
   
+  //assign enemies to locations
   for (int i = 0; i < enemies.length; i++) {
     int random_number = int(random(locations.length));
     enemies[i] = new Enemy("enemy" + str(i));
