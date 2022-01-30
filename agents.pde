@@ -81,7 +81,9 @@ void setup() {
     locations.get(random_number).assign_person(enemies.get(i));
   }
   
-  
+  Trader t = new Trader("Trader", locations.get(0));
+  people.add(t);
+  locations.get(0).assign_person(t);
 }
 
 void draw() {
@@ -250,7 +252,7 @@ void transferAgents() {
     Optional<Location> l = people.get(i).shouldTransfer();
     
     if (l.hasValue) {
-      people.get(i).startTransfer(people.get(i).newLocation, l.value);
+      people.get(i).startTransfer(people.get(i).p_location, l.value);
     }
   }
 }

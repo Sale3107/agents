@@ -193,4 +193,8 @@ class Location {
     }
   }
   
+  Location getRandomTradeRoute() {
+    return traders.get(floor(random(0, traders.size())));
+  }
+  
 }

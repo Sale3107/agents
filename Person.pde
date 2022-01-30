@@ -54,6 +54,7 @@ class Person {
   }
   
   void startTransfer(Location tempoldLocation, Location tempnewLocation) {
+    tempoldLocation.remove_person(this);
     isTransferring = true;
     transferProgress = 0;
     oldLocation = tempoldLocation;
