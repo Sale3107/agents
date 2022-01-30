@@ -173,6 +173,10 @@ void keyPressed() {  //This is fucking stupid and i hate it.
 
 void transferPeople() {
   for (int i = 0; i < people.size(); i++) {
+    if (people.get(i).isTransferring) {
+      continue;
+    }
+    
     Optional<Location> l = people.get(i).shouldTransfer();
     
     if (l.hasValue) {
