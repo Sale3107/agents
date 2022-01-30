@@ -1,12 +1,18 @@
-Location[] locations;
+ArrayList<Location> locations = new ArrayList<Location>();
+int initalLocationSize = 9;
 
-Person[] people;
+//Person[] people;
 
-Agent[] agents;
-Civilian[] civilians;
-Enemy[] enemies;
+int initialAgentSize = 9;
+int initialCivSize = 9;
+int initialEnemySize = 9;
 
-PVector newPos;
+ArrayList<Agent> agents = new ArrayList<Agent>();
+ArrayList<Civilian> civilians = new ArrayList<Civilian>();
+ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+
+ArrayList<Person> people = new ArrayList<Person>();
+int initialPeopleSize = initialAgentSize + initialCivSize + initialEnemySize;
 
 String[] names = {
   "Madrid", "Porto", "Tokyo", "Washington D.C", "Shanghai", "Moscow", "Quebec", "Ottowa",
@@ -19,19 +25,13 @@ float increment = 0.02;
 Location selectedLocation;
 int time1;
 
+String gay = "among us";
+
 void setup() {
   background(66, 69, 56);
   fullScreen();
   
   time1 = millis();
-  
-  locations = new Location[12];
-  
-  agents = new Agent[15];
-  civilians = new Civilian[12];
-  enemies = new Enemy[10];
-  
-  people = new Person[agents.length + civilians.length + enemies.length];
   
   //generate a field of evenly distributed points and assign the laocitons to towns
   ArrayList<PVector> distributedPoints = generatePoints(locations.length, width - 250,  height - 250);
@@ -41,7 +41,7 @@ void setup() {
   }
   
   //Create towns and assign properties
-  for (int i = 0; i < locations.length; i++) {
+  for (int i = 0; i < initalLocationSize; i++) {
     int p = round(random(500, 1200));
     boolean isTown;
     if (p < 700) {
@@ -50,36 +50,36 @@ void setup() {
       isTown = false;
     }
     String name = names[floor(random(0, names.length))];
-    locations[i] = new Location(name, distributedPoints.get(i), round(random(500, 1200)), i, isTown);
+    locations.add(new Location(name, distributedPoints.get(i), round(random(500, 1200)), i, isTown));
   }
   
   //generate trade routes
-  for (int i = 0; i < locations.length; i++) {
-    locations[i].setTraders(generateTradeRoutes(locations, locations[i]));
+  for (int i = 0; i < locations.size(); i++) {
+    locations.get(i).setTraders(generateTradeRoutes(locations, locations.get(i)));
   }
   
   //assign agents to locations
-  for (int i = 0; i < agents.length; i++) {
-    int random_number = int(random(locations.length));
-    agents[i] = new Agent("agent" + str(i));
-    people[i] = agents[i];
-    locations[random_number].assign_person(agents[i]);
+  for (int i = 0; i < initialAgentSize; i++) {
+    int random_number = int(random(locations.size()));
+    agents.add(new Agent("agent" + str(i)));
+    people.add(agents.get(i));
+    locations.get(random_number).assign_person(agents.get(i));
   }
   
   //assign civilians to locations
-  for (int i = 0; i < civilians.length; i++) {
-    int random_number = int(random(locations.length));
-    civilians[i] = new Civilian("civilian" + str(i));
-    people[i + agents.length] = civilians[i];
-    locations[random_number].assign_person(civilians[i]);
+  for (int i = 0; i < initialCivSize; i++) {
+    int random_number = int(random(locations.size()));
+    civilians.add(new Civilian("civilian" + str(i)));
+    people.add(civilians.get(i));
+    locations.get(random_number).assign_person(civilians.get(i));
   }
   
   //assign enemies to locations
-  for (int i = 0; i < enemies.length; i++) {
-    int random_number = int(random(locations.length));
-    enemies[i] = new Enemy("enemy" + str(i));
-    people[i + agents.length + civilians.length] = enemies[i];
-    locations[random_number].assign_person(enemies[i]);
+  for (int i = 0; i < initialEnemySize; i++) {
+    int random_number = int(random(locations.size()));
+    enemies.add(new Enemy("enemy" + str(i)));
+    people.add(enemies.get(i));
+    locations.get(random_number).assign_person(enemies.get(i));
   }
   
   
@@ -97,15 +97,15 @@ void draw() {
   if (mode == "MAP") {
 
     drawLines();
+    for (int i = 0; i < people.size(); i++) {
+      if (people.get(i).isTransferring) {
+        people.get(i).displayTransfer();
 
-    for (int i = 0; i < people.length; i++) {
-      if (people[i].isTransferring) {
-        people[i].displayTransfer();
       }
     }
     
-    for (int i = 0; i < locations.length; i++) {
-      locations[i].mapDisplay();
+    for (int i = 0; i < locations.size(); i++) {
+      locations.get(i).mapDisplay();
     }
     
   } else if (mode == "SINGLE") {
@@ -116,19 +116,19 @@ void draw() {
     textSize(80);
     stroke(245);
     text("agents: ", 100, 100);
-    for (int i = 0; i < agents.length; i++) {
+    for (int i = 0; i < agents.size(); i++) {
       PVector displayPos = new PVector(100, 200 + (i * 50));
-      agents[i].display(displayPos, 40);
+      agents.get(i).display(displayPos, 40);
     }
   }
 }
 
 void mouseClicked() {
   if (mode == "MAP") {
-    for (int i = 0; i < locations.length; i ++){
-      if (locations[i].checkIfMouseOver()){
-        println("Mouse has been clicked on: " + locations[i].name);
-        selectedLocation = locations[i];
+    for (int i = 0; i < locations.size(); i ++){
+      if (locations.get(i).checkIfMouseOver()){
+        println("Mouse has been clicked on: " + locations.get(i).name);
+        selectedLocation = locations.get(i);
         mode = "SINGLE";
       }
     }
@@ -144,23 +144,23 @@ void keyPressed() {
   }
 
 void transferAgents() {  //Agent Transferring Manager
-  for (int i = 0; i < locations.length; i++) {  //Loop through every location.
+  for (int i = 0; i < locations.size(); i++) {  //Loop through every location.
     if (int(random(0, 2)) == 1) {  //Random chance that it will lose a person.
-      if (locations[i].traders.size() > 0) {  //Check if it has any available trade routes
+      if (locations.get(i).traders.size() > 0) {  //Check if it has any available trade routes
         int amountOfPeople = int(random(0, 3));  //Generate amount of people to get, then Check if it has enough people.
-        if (locations[i].current_people.size() > amountOfPeople) {  //If it does then:  
+        if (locations.get(i).current_people.size() > amountOfPeople) {  //If it does then:  
           for (int peopleCount = 0; peopleCount < amountOfPeople; peopleCount++) {
             
             //Generate a random person from current location's 'current_people' list.
-            Person newPerson = locations[i].current_people.get(int(random(0, locations[i].current_people.size())));
+            Person newPerson = locations.get(i).current_people.get(int(random(0, locations.get(i).current_people.size())));
             
             //Generate the new location from the trade route options.
-            int randomLocation = int(random(0, locations[i].traders.size()));
-            Location newLocation = locations[i].traders.get(randomLocation);
+            int randomLocation = int(random(0, locations.get(i).traders.size()));
+            Location newLocation = locations.get(i).traders.get(randomLocation);
             
             //Tell the person it is transferring.
-            newPerson.startTransfer(locations[i], newLocation);        
-            locations[i].remove_person(newPerson);  
+            newPerson.startTransfer(locations.get(i), newLocation);        
+            locations.get(i).remove_person(newPerson);  
             
           }            
         }
@@ -170,14 +170,14 @@ void transferAgents() {  //Agent Transferring Manager
 }
 
 void drawLines() {
-  for (int i = 0; i < locations.length; i++) {  //Loop through every location:
+  for (int i = 0; i < locations.size(); i++) {  //Loop through every location:
     
-    if (locations[i].checkIfMouseOver()){  //Check if it is being moused Over.
+    if (locations.get(i).checkIfMouseOver()){  //Check if it is being moused Over.
       
-      for (int t = 0; t < locations.length; t++) {  // if it is, then loop through the rest of the locations,
-        float d = dist(locations[i].position.x, locations[i].position.y, locations[t].position.x, locations[t].position.y); // generate distance between the 2 places.
+      for (int t = 0; t < locations.size(); t++) {  // if it is, then loop through the rest of the locations,
+        float d = dist(locations.get(i).position.x, locations.get(i).position.y, locations.get(t).position.x, locations.get(t).position.y); // generate distance between the 2 places.
         if (!(t == i)) {  //check if the location is itself.
-          if (locations[i].traders.contains(locations[t])){  //and check if it is a trade route.
+          if (locations.get(i).traders.contains(locations.get(t))){  //and check if it is a trade route.
             stroke(190, 90, 70, 255);  //if it is, then use these display colours.
             strokeWeight(3);
           } else if (d <= 750) {
@@ -187,20 +187,20 @@ void drawLines() {
             stroke(180, 150);  //if not, then use these default ones.
             strokeWeight(1);
           }
-          line(locations[i].position.x, locations[i].position.y, locations[t].position.x, locations[t].position.y);
+          line(locations.get(i).position.x, locations.get(i).position.y, locations.get(t).position.x, locations.get(t).position.y);
           fill(25);
           textSize(10);
-          float x = (locations[i].position.x + locations[t].position.x) / 2;
-          float y = (locations[i].position.y + locations[t].position.y) / 2;
+          float x = (locations.get(i).position.x + locations.get(t).position.x) / 2;
+          float y = (locations.get(i).position.y + locations.get(t).position.y) / 2;
           text(d, x, y);
         }
       }
     }
     
-    for (int k = i + 1; k < locations.length; k++){
-      float d = dist(locations[i].getX(), locations[i].getY(), locations[k].getX(), locations[k].getY());
+    for (int k = i + 1; k < locations.size(); k++){
+      float d = dist(locations.get(i).getX(), locations.get(i).getY(), locations.get(k).getX(), locations.get(k).getY());
       if (d <= 750) {
-        if (locations[i].traders.contains(locations[k])){
+        if (locations.get(i).traders.contains(locations.get(k))){
           stroke(190, 90, 70, 40);  //if it is, then use these display colours.
           strokeWeight(1);
         } else {
@@ -208,7 +208,7 @@ void drawLines() {
           strokeWeight(1);
         }
         
-      line(locations[i].position.x, locations[i].position.y, locations[k].position.x, locations[k].position.y);
+      line(locations.get(i).position.x, locations.get(i).position.y, locations.get(k).position.x, locations.get(k).position.y);
     }
   }   
  }
@@ -261,13 +261,14 @@ ArrayList<PVector> generatePoints(int amount, int canvasWidth, int canvasHeight)
     return points;
 }
 
-ArrayList<Location> generateTradeRoutes(Location[] all_locations, Location currentLocation) {
+ArrayList<Location> generateTradeRoutes(ArrayList<Location> all_locations, Location currentLocation) {
   ArrayList<Location> traders = new ArrayList<Location>();
-  for (int i = 0; i < all_locations.length; i++){
-    if (currentLocation != all_locations[i]){
-      float d = dist(currentLocation.position.x, currentLocation.position.y, all_locations[i].position.x, all_locations[i].position.y);
+  for (int i = 0; i < all_locations.size(); i++){
+    Location otherLocation = all_locations.get(i);
+    if (currentLocation != otherLocation){
+      float d = dist(currentLocation.position.x, currentLocation.position.y, otherLocation.position.x, otherLocation.position.y);
       if (d <= 500) {
-        traders.add(all_locations[i]);
+        traders.add(otherLocation);
       }
     }
   }
