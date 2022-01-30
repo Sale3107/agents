@@ -11,10 +11,6 @@ class Trader extends Person {
     home = _home;
   }
   
-  void update() {
-    
-  }
-  
   Optional<Location> shouldTransfer() {
     clock++;
     
