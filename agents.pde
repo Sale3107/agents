@@ -1,14 +1,18 @@
-//Location[] locations;
 ArrayList<Location> locations = new ArrayList<Location>();
-int initalLocationSize = 5;
+int initalLocationSize = 9;
 
-Person[] people;
+//Person[] people;
 
-Agent[] agents;
-Civilian[] civilians;
-Enemy[] enemies;
+int initialAgentSize = 9;
+int initialCivSize = 9;
+int initialEnemySize = 9;
 
-PVector newPos;
+ArrayList<Agent> agents = new ArrayList<Agent>();
+ArrayList<Civilian> civilians = new ArrayList<Civilian>();
+ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+
+ArrayList<Person> people = new ArrayList<Person>();
+int initialPeopleSize = initialAgentSize + initialCivSize + initialEnemySize;
 
 String amongus;
 
@@ -33,12 +37,6 @@ void setup() {
   time1 = millis();
   timer2 = millis();
   
-  agents = new Agent[15];
-  civilians = new Civilian[12];
-  enemies = new Enemy[10];
-  
-  people = new Person[agents.length + civilians.length + enemies.length];
-  
   ArrayList<PVector> distributedPoints = generatePoints(initalLocationSize, width - 250,  height - 250);
   for (int i  = 0; i < distributedPoints.size(); i++) {
     PVector currentPoint = distributedPoints.get(i);
@@ -58,30 +56,29 @@ void setup() {
   }
   
   for (int i = 0; i < locations.size(); i++) {
-    Location cLocation = locations.get(i);
     locations.get(i).setTraders(generateTradeRoutes(locations, locations.get(i)));
   }
   
   
-  for (int i = 0; i < agents.length; i++) {
+  for (int i = 0; i < initialAgentSize; i++) {
     int random_number = int(random(locations.size()));
-    agents[i] = new Agent("agent" + str(i));
-    people[i] = agents[i];
-    locations.get(random_number).assign_person(agents[i]);
+    agents.add(new Agent("agent" + str(i)));
+    people.add(agents.get(i));
+    locations.get(random_number).assign_person(agents.get(i));
   }
   
-  for (int i = 0; i < civilians.length; i++) {
+  for (int i = 0; i < initialCivSize; i++) {
     int random_number = int(random(locations.size()));
-    civilians[i] = new Civilian("civilian" + str(i));
-    people[i + agents.length] = civilians[i];
-    locations.get(random_number).assign_person(civilians[i]);
+    civilians.add(new Civilian("civilian" + str(i)));
+    people.add(civilians.get(i));
+    locations.get(random_number).assign_person(civilians.get(i));
   }
   
-  for (int i = 0; i < enemies.length; i++) {
+  for (int i = 0; i < initialEnemySize; i++) {
     int random_number = int(random(locations.size()));
-    enemies[i] = new Enemy("enemy" + str(i));
-    people[i + agents.length + civilians.length] = enemies[i];
-    locations.get(random_number).assign_person(enemies[i]);
+    enemies.add(new Enemy("enemy" + str(i)));
+    people.add(enemies.get(i));
+    locations.get(random_number).assign_person(enemies.get(i));
   }
   
   
@@ -105,9 +102,9 @@ void draw() {
     //drawRelationships();
     drawLines();
     //drawLinesFromLineList();
-    for (int i = 0; i < people.length; i++) {
-      if (people[i].isTransferring) {
-        people[i].displayTransfer();
+    for (int i = 0; i < people.size(); i++) {
+      if (people.get(i).isTransferring) {
+        people.get(i).displayTransfer();
       }
     }
     
@@ -123,9 +120,9 @@ void draw() {
     textSize(80);
     stroke(245);
     text("agents: ", 100, 100);
-    for (int i = 0; i < agents.length; i++) {
+    for (int i = 0; i < agents.size(); i++) {
       PVector displayPos = new PVector(100, 200 + (i * 50));
-      agents[i].display(displayPos, 40);
+      agents.get(i).display(displayPos, 40);
     }
   }
 }
