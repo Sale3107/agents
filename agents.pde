@@ -47,17 +47,10 @@ void setup() {
   //generate trade routes
   for (int i = 0; i < locations.size(); i++) {
     locations.get(i).setTradeRoutes(generateTradeRoutes(locations, locations.get(i)));
+    if(locations.get(i).tradeRoutes.size() > 0){
+      
+    }
   }
-  
-  //assign agents to locations
-  /*
-  for (int i = 0; i < initialAgentSize; i++) {
-    int random_number = int(random(locations.size()));
-    agents.add(new Agent("agent" + str(i)));
-    people.add(agents.get(i));
-    locations.get(random_number).assign_person(agents.get(i));
-  }
-  */
   
   Trader t = new Trader("Trader", locations.get(0));
   people.add(t);
