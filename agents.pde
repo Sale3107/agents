@@ -322,7 +322,10 @@ void removeLocation(Location loc){
   }
   
   if (loc.traders.size() == 0) {
-    return; 
+    for (int i = 0; i < loc.current_people.size(); i++) {
+      loc.current_people.get(i).startTransfer(loc, locations.get(floor(random(0, locations.size()))));
+    }
+    return;
   }
   
   //Transfer people through trade routes
