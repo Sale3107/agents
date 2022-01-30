@@ -10,7 +10,8 @@ class Location {
   boolean isTown;
   
   ArrayList<Person> current_people = new ArrayList<Person>();
-  ArrayList<Location> traders = new ArrayList<Location>();
+  ArrayList<Location> tradeRoutes = new ArrayList<Location>();
+  ArrayList<Trader> traders = new ArrayList<Trader>();
   
   boolean exists = true;
   
@@ -27,8 +28,8 @@ class Location {
     
   }
   
-  void setTraders(ArrayList<Location> temp_traders) {
-    traders = temp_traders;
+  void setTradeRoutes(ArrayList<Location> temp_traders) {
+    tradeRoutes = temp_traders;
   }
   
   float getX() {
@@ -113,8 +114,8 @@ class Location {
     textSize(11);
     text("i: " + wealth, position.x, position.y - 42);
     //Display trade routes as text.
-    for (int i = 0; i < traders.size(); i++) {
-      Location current_trader = traders.get(i);
+    for (int i = 0; i < tradeRoutes.size(); i++) {
+      Location current_trader = tradeRoutes.get(i);
       fill(180);
       textSize(10);
       text(current_trader.name, position.x, position.y + 50 + (i * 10));
@@ -146,8 +147,8 @@ class Location {
   }
   
   void displayTradeRoutes() {
-    for (int i = 0; i < traders.size(); i++) {
-      Location active_loc = traders.get(i);
+    for (int i = 0; i < tradeRoutes.size(); i++) {
+      Location active_loc = tradeRoutes.get(i);
       PVector render_position = new PVector(int((width / 2) - 150) , int((height / 2) - 75) + (i * 50));
       active_loc.tradeDisplay(render_position, 30);
     }
@@ -194,7 +195,7 @@ class Location {
   }
   
   Location getRandomTradeRoute() {
-    return traders.get(floor(random(0, traders.size())));
+    return tradeRoutes.get(floor(random(0, tradeRoutes.size())));
   }
   
 }
