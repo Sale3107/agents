@@ -340,7 +340,7 @@ void removeLocation(Location loc){
   
   //Transfer people through trade routes
   for (int i =0; i < loc.current_people.size(); i++) {
-    Location targetLocation = loc.traders.get(round(random(0, loc.traders.size() - 1)));
+    Location targetLocation = loc.getRandomTradeRoute();
     loc.current_people.get(i).startTransfer(loc, targetLocation);
   }
 }
