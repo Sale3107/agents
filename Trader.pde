@@ -7,6 +7,7 @@ class Trader extends Person {
   
   Trader(String tname, Location _home){
     super(tname);
+    increment = 0.005;
     displaycolour = color(220, 140, 75);
     home = _home;
   }
