@@ -35,7 +35,7 @@ void setup() {
   
   //generate a field of evenly distributed points and assign the laocitons to towns
   ArrayList<PVector> distributedPoints = generatePoints(initalLocationSize, width - 250,  height - 250);
-  for (int i  = 0; i < initalLocationSize; i++) {
+  for (int i  = 0; i < distributedPoints.size(); i++) {
     PVector currentPoint = distributedPoints.get(i);
     currentPoint.add(new PVector(125, 125));
   }
