@@ -21,4 +21,8 @@ class Agent extends Person {
     fill(255);
   }
 
+  Optional<Location> shouldTransfer() {
+    return new Optional<Location>();
+  }
+
 }
