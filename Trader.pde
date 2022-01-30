@@ -1,9 +1,9 @@
 class Trader extends Person {
   
-  int clock = 0;
-  int cycleTime = 10;
+  private int clock = 0;
+  private int cycleTime = 10;
   
-  Location home;
+  private Location home;
   
   Trader(String tname, Location _home){
     super(tname);

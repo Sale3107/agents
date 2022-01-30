@@ -1,12 +1,10 @@
 class Traveller extends Person {
   
-  int clock = 0;
-  int cycleTime = 3;
-  int cycleStage = 0;
+  private int clock = 0;
+  private int cycleTime = 3;
+  private int cycleStage = 0;
   
-  boolean travellingHome = false;
-  
-  Location home;
+  private Location home;
   
   Traveller (String tname, Location _home) {
     super(tname);
@@ -28,7 +26,6 @@ class Traveller extends Person {
         
         for(int i = 0; i < p_location.connections.size(); i++){
           if(p_location.connections.contains(home)){
-            travellingHome = true;
             cycleStage = 5;
             return new Optional<Location>(p_location.connections.get(i));
           }
@@ -40,13 +37,10 @@ class Traveller extends Person {
       } else if(cycleStage == 5){
         cycleStage = 0;
         return new Optional<Location>(home);
-      }
-    
-    
-    
-  }
+      } 
+    }
   
-  return new Optional<Location>();
+    return new Optional<Location>();
   
   }
   

@@ -1,9 +1,9 @@
 class Sailor extends Person {
   
-  int clock = 0;
-  int cycleTime = 20;
+  private int clock = 0;
+  private int cycleTime = 20;
   
-  Location home;
+  private Location home;
   
   Sailor (String tname, Location _home) {
     super(tname);
