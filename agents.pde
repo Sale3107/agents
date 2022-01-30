@@ -14,8 +14,6 @@ ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 ArrayList<Person> people = new ArrayList<Person>();
 int initialPeopleSize = initialAgentSize + initialCivSize + initialEnemySize;
 
-String amongus;
-
 String[] names = {
   "Madrid", "Porto", "Tokyo", "Washington D.C", "Shanghai", "Moscow", "Quebec", "Ottowa",
   "Dublin", "Paris", "Berlin", "Rome", "London", "Reikjavik", "Athens", "Sydney","Oslo",
@@ -26,7 +24,6 @@ String mode = "MAP";
 float increment = 0.02;
 Location selectedLocation;
 int time1;
-int timer2;
 
 String gay = "among us";
 
@@ -35,14 +32,15 @@ void setup() {
   fullScreen();
   
   time1 = millis();
-  timer2 = millis();
   
-  ArrayList<PVector> distributedPoints = generatePoints(initalLocationSize, width - 250,  height - 250);
+  //generate a field of evenly distributed points and assign the laocitons to towns
+  ArrayList<PVector> distributedPoints = generatePoints(locations.length, width - 250,  height - 250);
   for (int i  = 0; i < distributedPoints.size(); i++) {
     PVector currentPoint = distributedPoints.get(i);
     currentPoint.add(new PVector(125, 125));
   }
   
+  //Create towns and assign properties
   for (int i = 0; i < initalLocationSize; i++) {
     int p = round(random(500, 1200));
     boolean isTown;
@@ -55,11 +53,12 @@ void setup() {
     locations.add(new Location(name, distributedPoints.get(i), round(random(500, 1200)), i, isTown));
   }
   
+  //generate trade routes
   for (int i = 0; i < locations.size(); i++) {
     locations.get(i).setTraders(generateTradeRoutes(locations, locations.get(i)));
   }
   
-  
+  //assign agents to locations
   for (int i = 0; i < initialAgentSize; i++) {
     int random_number = int(random(locations.size()));
     agents.add(new Agent("agent" + str(i)));
@@ -67,6 +66,7 @@ void setup() {
     locations.get(random_number).assign_person(agents.get(i));
   }
   
+  //assign civilians to locations
   for (int i = 0; i < initialCivSize; i++) {
     int random_number = int(random(locations.size()));
     civilians.add(new Civilian("civilian" + str(i)));
@@ -74,6 +74,7 @@ void setup() {
     locations.get(random_number).assign_person(civilians.get(i));
   }
   
+  //assign enemies to locations
   for (int i = 0; i < initialEnemySize; i++) {
     int random_number = int(random(locations.size()));
     enemies.add(new Enemy("enemy" + str(i)));
@@ -90,21 +91,16 @@ void draw() {
   {
     transferAgents();
     time1 = millis();
-  } 
-  
-  if(millis() > timer2 + 1000) {
-    //transferResources();
-    timer2 = millis();
   }
 
   background(69, 71, 57);
   if (mode == "MAP") {
-    //drawRelationships();
+
     drawLines();
-    //drawLinesFromLineList();
     for (int i = 0; i < people.size(); i++) {
       if (people.get(i).isTransferring) {
         people.get(i).displayTransfer();
+
       }
     }
     
