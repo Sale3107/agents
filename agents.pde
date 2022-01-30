@@ -48,13 +48,13 @@ void setup() {
   for (int i = 0; i < locations.size(); i++) {
     locations.get(i).setTradeRoutes(generateTradeRoutes(locations, locations.get(i)));
     if(locations.get(i).tradeRoutes.size() > 0){
-      
+      for (int k = 0; k < locations.get(i).tradeRoutes.size(); k++){
+        Trader t = new Trader(locations.get(i).name + "Trader", locations.get(i));
+        people.add(t);
+        locations.get(i).assign_person(t);
+      }
     }
   }
-  
-  Trader t = new Trader("Trader", locations.get(0));
-  people.add(t);
-  locations.get(0).assign_person(t);
 }
 
 void draw() {
