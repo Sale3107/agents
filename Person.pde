@@ -85,7 +85,13 @@ class Person {
       if (newLocation.exists) {
         newLocation.assign_person(this);
       } else {
-        startTransfer(newLocation, oldLocation);
+        if (oldLocation.exists) {
+          startTransfer(newLocation, oldLocation);
+        }
+        else {
+          startTransfer(newLocation, oldLocation.traders.get(floor(random(0, oldLocation.traders.size() - 1))));
+        }
+        
       }
     }
     
