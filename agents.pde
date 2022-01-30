@@ -322,7 +322,7 @@ void removeLocation(Location loc){
   }
   
   //if the location is the last locaiton
-  if (locations.size() == 1) {
+  if (locations.size() == 0) {
     return;
   }
   
