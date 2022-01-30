@@ -82,7 +82,11 @@ class Person {
     
     if (transferProgress >= 1 - increment) {
       isTransferring = false;
-      newLocation.assign_person(this);  //Assign this object to it's new location when it arrives there.
+      if (newLocation.exists) {
+        newLocation.assign_person(this);
+      } else {
+        startTransfer(newLocation, oldLocation);
+      }
     }
     
   }

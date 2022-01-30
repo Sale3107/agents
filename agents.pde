@@ -315,6 +315,8 @@ void createEnemy(Location loc){
 void removeLocation(Location loc){
   locations.remove(locations.indexOf(loc));
   
+  loc.exists = false;
+  
   //Remove trade reference from other nodes
   for (int i = 0; i < loc.traders.size(); i++) {
     Location traderReference = loc.traders.get(i); 

@@ -12,6 +12,8 @@ class Location {
   ArrayList<Person> current_people = new ArrayList<Person>();
   ArrayList<Location> traders = new ArrayList<Location>();
   
+  boolean exists = true;
+  
   Location (String tempname, PVector temppos, int temppopulation, int initialwealth, boolean t_isTown) {
     name = tempname;
     position = temppos;
