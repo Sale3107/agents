@@ -98,12 +98,12 @@ void draw() {
     }
     
     for (int i = 0; i < locations.size(); i++) {
-      locations.get(i).mapDisplay();
+      locations.get(i).display(locations.get(i).position, 45, true, true, true, true, true);
     }
     
   } else if (mode == "SINGLE") {
-    
-    selectedLocation.singleDisplay();
+    PVector center = new PVector(width / 2, height / 2);
+    selectedLocation.display(center, 100, true, false, true, false, false);
     selectedLocation.displayTradeRoutes();
     
   } else if (mode == "NEWLOC") {
@@ -112,7 +112,7 @@ void draw() {
       stroke(190, 20);
       strokeWeight(0.5);
       line(mouseX, mouseY, locations.get(i).position.x, locations.get(i).position.y);
-      locations.get(i).mapDisplay();
+      locations.get(i).display(locations.get(i).position, 45, true, true, true, true, true);
     }
     
     ellipseMode(CENTER);
@@ -130,7 +130,7 @@ void draw() {
       stroke(190, 20);
       strokeWeight(0.5);
       line(locPos.x, locPos.y, locations.get(i).position.x, locations.get(i).position.y);
-      locations.get(i).mapDisplay();
+      locations.get(i).display(locations.get(i).position, 45, true, true, true, true, true);
     }
     
     fill(140, 150, 145, 220);
