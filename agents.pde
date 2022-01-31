@@ -267,17 +267,28 @@ void drawLines() {
 }
 
 void removeLocation(Location loc){
-  if (loc.tradeRoutes.size() == 0) {
-    return; 
+  //if the location is the last locaiton
+  if (locations.size() == 1) {
+    return;
   }
+  
   locations.remove(locations.indexOf(loc));
   
   loc.exists = false;
   
-  //Remove trade reference from other nodes
+  //Remove tradeRoute reference from other nodes
   for (int i = 0; i < loc.tradeRoutes.size(); i++) {
     Location traderReference = loc.tradeRoutes.get(i); 
     traderReference.tradeRoutes.remove(traderReference.tradeRoutes.indexOf(loc));
+
+
+  //if there are no remaining Traders at the location
+  if (loc.traders.size() == 0) {
+    for (int i = 0; i < loc.current_people.size(); i++) {
+      loc.current_people.get(i).startTransfer(loc, locations.get(floor(random(0, locations.size()))));
+    }
+    return;
+
   }
   
   //Transfer people through trade routes
