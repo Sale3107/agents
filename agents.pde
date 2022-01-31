@@ -1,5 +1,5 @@
 ArrayList<Location> locations = new ArrayList<Location>();
-int initalLocationSize = 10;
+int initalLocationSize = 8;
 
 ArrayList<Person> people = new ArrayList<Person>();
 int initialPeopleSize = 0;
@@ -52,7 +52,11 @@ void setup() {
     
     
     if(locations.get(i).tradeRoutes.size() > 0){
-      for (int k = 0; k < locations.get(i).tradeRoutes.size(); k++){
+      int amount = locations.get(i).tradeRoutes.size();
+      if(amount > 3){
+        amount = 3;
+      }
+      for (int k = 0; k < amount; k++){
         Trader t = new Trader(locations.get(i).name + " Trader", locations.get(i));
         people.add(t);
         locations.get(i).assign_person(t);
@@ -60,7 +64,7 @@ void setup() {
     }
     
     if(locations.get(i).connections.size() > 0){
-      for(int k = 0; k < 3; k++){
+      for(int k = 0; k < 2; k++){
         Traveller tv = new Traveller(locations.get(i).name + " Traveller", locations.get(i));
         people.add(tv);
         locations.get(i).assign_person(tv);
@@ -220,35 +224,44 @@ void drawLines() {
             stroke(180, 150);  //if not, then use these default ones.
             strokeWeight(1);
           }
-          float mx = (locations.get(i).position.x + locations.get(t).position.x) / 2;
-          float my = (locations.get(i).position.y + locations.get(t).position.y) / 2;
           if(locations.get(i).sailRoute == locations.get(t)){
             strokeWeight(4);
             stroke(100, 160, 225);
+            noFill();
+            float ax1 = locations.get(i).getX();
+            float ay1 = locations.get(i).getY();
+            float cx1 = locations.get(i).getX() + 10;
+            float cy1 = locations.get(i).getY() - 300;
+            float cx2 = locations.get(t).getX() - 10;
+            float cy2 = locations.get(t).getY() - 300;
+            float ax2 = locations.get(t).getX();
+            float ay2 = locations.get(t).getY();
+            bezier(ax1, ay1, cx1, cy1, cx2, cy2, ax2, ay2);
+          } else {
             line(locations.get(i).position.x, locations.get(i).position.y, locations.get(t).position.x, locations.get(t).position.y);
           }
-          line(locations.get(i).position.x, locations.get(i).position.y, locations.get(t).position.x, locations.get(t).position.y);
-          fill(25);
-          textSize(10);
           
-          text(d, mx, my);
+          
         }
       }
     }
     
     for (int k = i + 1; k < locations.size(); k++){
-      float d = dist(locations.get(i).getX(), locations.get(i).getY(), locations.get(k).getX(), locations.get(k).getY());
-      if (d <= 750) {
         if (locations.get(i).tradeRoutes.contains(locations.get(k))){
           stroke(190, 90, 70, 40);  //if it is, then use these display colours.
-          strokeWeight(1);
+          strokeWeight(1.3);
+        } else if(locations.get(i).connections.contains(locations.get(k))){
+          stroke( 234, 211, 118, 40);
+          strokeWeight(1.2);
+        } else if(locations.get(i).sailRoute == locations.get(k)){
+          strokeWeight(1.1);
+          stroke(80, 140, 210, 40);
         } else {
           stroke(240, 40);
           strokeWeight(1);
         }
-        
       line(locations.get(i).position.x, locations.get(i).position.y, locations.get(k).position.x, locations.get(k).position.y);
-    }
+      
   }   
  }
 }
@@ -364,18 +377,17 @@ ArrayList<Location> generateRoutes(ArrayList<Location> all_locations, Location c
 }
 
 Location findSailRoute(Location currentLocation){
-  for(int i = 0; i < locations.size(); i++){
-    Location otherLocation = locations.get(i);
-    if (currentLocation != otherLocation){
-      float d = dist(currentLocation.position.x, currentLocation.position.y, otherLocation.position.x, otherLocation.position.y);
-      if (d >= 900) {
-        return otherLocation;
-      }
-    }
+  Location furthestLocation = currentLocation;
+  float oldDist = 0;
+  for(int i = 1; i < locations.size(); i++){
+    float d = dist(currentLocation.getX(), currentLocation.getY(), locations.get(i).getX(), locations.get(i).getY());
+    println(oldDist);
+    if(d > oldDist){
+      oldDist = d;
+      furthestLocation = locations.get(i);
+    }    
   }
-  
-  return currentLocation.connections.get(floor(random(0, currentLocation.connections.size())));
-    
+  return furthestLocation; 
 }
 
 
