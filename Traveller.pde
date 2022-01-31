@@ -1,14 +1,14 @@
 class Traveller extends Person {
   
   private int clock = 0;
-  private int cycleTime = 3;
+  private int cycleTime = 7;
   private int cycleStage = 0;
   
   private Location home;
   
   Traveller (String tname, Location _home) {
     super(tname);
-    increment = 0.0125;
+    increment = 0.0125 - random(0, 0.0025);
     displaycolour = color(240, 235, 140);
     home = _home;
   }
