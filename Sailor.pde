@@ -7,7 +7,7 @@ class Sailor extends Person {
   
   Sailor (String tname, Location _home) {
     super(tname);
-    increment = 0.005;
+    increment = 0.0006 + random(0.001, 0.0002);
     displaycolour = color(100, 160, 225);
     home = _home;
   }
@@ -18,7 +18,7 @@ class Sailor extends Person {
     if (clock > cycleTime) {
       clock = 0;
       if (p_location == home) { 
-        return new Optional<Location>(p_location.getRandomTradeRoute());
+        return new Optional<Location>(home.sailRoute);
       }
         return new Optional<Location>(home);
     }
