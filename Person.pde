@@ -90,10 +90,10 @@ class Person {
           startTransfer(newLocation, oldLocation);
         }
         else {
-          if (oldLocation.traders.size() == 0) {
+          if (oldLocation.tradeRoutes.size() == 0) {
             return;
           }
-          startTransfer(newLocation, oldLocation.traders.get(floor(random(0, oldLocation.traders.size() - 1))));
+          startTransfer(newLocation, oldLocation.tradeRoutes.get(floor(random(0, oldLocation.tradeRoutes.size() - 1))));
         } 
       }
     }
