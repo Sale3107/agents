@@ -280,10 +280,10 @@ void removeLocation(Location loc){
   for (int i = 0; i < loc.tradeRoutes.size(); i++) {
     Location traderReference = loc.tradeRoutes.get(i); 
     traderReference.tradeRoutes.remove(traderReference.tradeRoutes.indexOf(loc));
+  }
 
-
-  //if there are no remaining Traders at the location
-  if (loc.traders.size() == 0) {
+  //if there are no remaining tradeRoutes at the location
+  if (loc.tradeRoutes.size() == 0) {
     for (int i = 0; i < loc.current_people.size(); i++) {
       loc.current_people.get(i).startTransfer(loc, locations.get(floor(random(0, locations.size()))));
     }
@@ -292,7 +292,7 @@ void removeLocation(Location loc){
   }
   
   //Transfer people through trade routes
-  for (int i =0; i < loc.current_people.size(); i++) {
+  for (int i = 0; i < loc.current_people.size(); i++) {
     Location targetLocation = loc.getRandomTradeRoute();
     loc.current_people.get(i).startTransfer(loc, targetLocation);
   }
