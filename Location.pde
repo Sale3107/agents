@@ -57,27 +57,22 @@ class Location {
     return position;
   }
   
-  void tradeDisplay(PVector renderPosition, float size) {
-    strokeWeight(1);
-    stroke(1);
-    fill(200, 190, 195);
-    //Outer Square:
-    rectMode(CENTER);
-    square(renderPosition.x, renderPosition.y, size);
-    //Inner Square Colour Logic:
-    if (checkIfMouseOver()) {
-      fill(220, 222, 254);
-    } else {
-      fill(innerColour);
-    }
-    square(renderPosition.x, renderPosition.y, size / 2);
-    fill(255);
-    textAlign(CENTER);
-    textSize(10);
-    text(name, renderPosition.x, renderPosition.y + (size - 2));
-  }
-  
-  void mapDisplay() {
+  void display(PVector renderPos, float size, boolean showName,
+              boolean showTradeRoutes, boolean showPopulation,
+              boolean showWealth, boolean checkMouse){
+    
+    /**
+    * Generic display method for a Location.
+    * @param renderPos This is a PVectore where the Location will be.
+    * @param size This is how big the location will be.
+    * @param showName This determines whether to render the name text or not.
+    * @param showTradeRoutes This determines whether the trade routes text will be listed or not.
+    * @param showPopulation This determines whether to render the population text or not.
+    * @param showWealth This determines whether to render the wealth text or not.
+    * @param checkMouse This determines whether the location's appearance will be affected by the mouse position.
+    * @return Displays the location as a square or circle on screen at specified coordinates.
+    */
+    
     float r;
     strokeWeight(1);
     stroke(1);
@@ -86,48 +81,63 @@ class Location {
     if (isTown) {
       
       ellipseMode(CENTER);
-      ellipse(position.x, position.y, outerSquareW - 2, outerSquareW - 2);
+      ellipse(renderPos.x, renderPos.y, size - 2, size - 2);
     } else {
       
       rectMode(CENTER);
-      square(position.x, position.y, outerSquareW);
+      square(renderPos.x, renderPos.y, size);
     }  
     
-    //Inner Square Colour Logic:
-    if (checkIfMouseOver()) {
-      fill(220, 222, 254, 255);
-      display_agents();
+    if(checkMouse){
+      //Inner Square Colour Logic:
+      if (checkIfMouseOver()) {
+        fill(220, 222, 254, 255);
+        display_agents();
+      } else {
+        fill(innerColour);
+      }
     } else {
       fill(innerColour);
     }
     
     if (isTown) {
-      r = 10 + (population / 90);
-      ellipse(position.x, position.y, r, r);
+      r = 10 + (population / (size * 4));
+      ellipse(renderPos.x, renderPos.y, r, r);
     } else {
-      r = 10 + (population / 55);
-      square(position.x, position.y, r);
+      r = 10 + (population / (size * 4));
+      square(renderPos.x, renderPos.y, r);
     }
     
-    
     fill(255, 255, 255, 255);
-    //Name Text:
-    textAlign(CENTER);
-    textSize(12);
-    text(name, position.x, position.y + 40);
-    //Population text:
-    fill(19);
-    textSize(12);
-    text("P: " + population, position.x, position.y - 30);
-    fill(200, 210, 0, 200);
-    textSize(11);
-    text("i: " + wealth, position.x, position.y - 42);
-    //Display trade routes as text.
-    for (int i = 0; i < tradeRoutes.size(); i++) {
-      Location current_trader = tradeRoutes.get(i);
-      fill(180);
-      textSize(10);
-      text(current_trader.name, position.x, position.y + 50 + (i * 10));
+    
+    if(showName){
+      //Name Text:
+      textAlign(CENTER);
+      textSize(12);
+      text(name, renderPos.x, renderPos.y + (size - (size / 4)));
+    }
+    
+    if(showPopulation){
+      //Population text:
+      fill(19);
+      textSize(12);
+      text("P: " + population, renderPos.x, renderPos.y - 30);
+    }
+    
+    if(showWealth){
+      fill(200, 210, 0, 200);
+      textSize(11);
+      text("i: " + wealth, renderPos.x, renderPos.y - 42);
+    }
+    
+    if(showTradeRoutes){
+      //Display trade routes as text.
+      for (int i = 0; i < tradeRoutes.size(); i++) {
+        Location current_trader = tradeRoutes.get(i);
+        fill(180);
+        textSize(10);
+        text(current_trader.name, renderPos.x, renderPos.y + 45 + (i * 10));
+      }
     }
   }
   
@@ -159,7 +169,7 @@ class Location {
     for (int i = 0; i < tradeRoutes.size(); i++) {
       Location active_loc = tradeRoutes.get(i);
       PVector render_position = new PVector(int((width / 2) - 150) , int((height / 2) - 75) + (i * 50));
-      active_loc.tradeDisplay(render_position, 30);
+      active_loc.display(render_position, 30, true, false, false, false, false);
     }
   }
   
