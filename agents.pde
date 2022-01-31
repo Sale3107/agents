@@ -98,13 +98,22 @@ void draw() {
     }
     
     for (int i = 0; i < locations.size(); i++) {
-      locations.get(i).display(locations.get(i).position, 45, true, true, true, true, true);
+      locations.get(i).setRenderPosition(locations.get(i).position);
+      locations.get(i).setRenderSize(45);
+      locations.get(i).display(true, true, true, true, true);
     }
     
   } else if (mode == "SINGLE") {
     PVector center = new PVector(width / 2, height / 2);
-    selectedLocation.display(center, 100, true, false, true, false, false);
+    selectedLocation.setRenderPosition(center);
+    selectedLocation.setRenderSize(100);
+    selectedLocation.display(true, false, false, false, false);
     selectedLocation.displayTradeRoutes();
+    for (int i = 0; i < selectedLocation.current_people.size(); i++){
+      PVector render_position = new PVector(int(center.x + 75) , int(center.y - 40) + (i * 24));
+      selectedLocation.displayPerson(render_position, 20, i);
+    }
+    
     
   } else if (mode == "NEWLOC") {
     
@@ -112,7 +121,9 @@ void draw() {
       stroke(190, 20);
       strokeWeight(0.5);
       line(mouseX, mouseY, locations.get(i).position.x, locations.get(i).position.y);
-      locations.get(i).display(locations.get(i).position, 45, true, true, true, true, true);
+      locations.get(i).setRenderPosition(locations.get(i).position);
+      locations.get(i).setRenderSize(45);
+      locations.get(i).display(true, true, true, true, true);
     }
     
     ellipseMode(CENTER);
@@ -130,7 +141,9 @@ void draw() {
       stroke(190, 20);
       strokeWeight(0.5);
       line(locPos.x, locPos.y, locations.get(i).position.x, locations.get(i).position.y);
-      locations.get(i).display(locations.get(i).position, 45, true, true, true, true, true);
+      locations.get(i).setRenderPosition(locations.get(i).position);
+      locations.get(i).setRenderSize(45);
+      locations.get(i).display(true, true, true, true, true);
     }
     
     fill(140, 150, 145, 220);
@@ -146,7 +159,7 @@ void draw() {
 }
 
 void mouseClicked() {
-  if (mode == "MAP") {
+  if (mode == "MAP" || mode == "SINGLE") {
     for (int i = 0; i < locations.size(); i ++){
       if (locations.get(i).checkIfMouseOver()){
         if (mouseButton == LEFT){
@@ -212,7 +225,6 @@ void drawLines() {
     if (locations.get(i).checkIfMouseOver()){  //Check if it is being moused Over.
       
       for (int t = 0; t < locations.size(); t++) {  // if it is, then loop through the rest of the locations,
-        float d = dist(locations.get(i).position.x, locations.get(i).position.y, locations.get(t).position.x, locations.get(t).position.y); // generate distance between the 2 places.
         if (!(t == i)) {  //check if the location is itself.
           if (locations.get(i).tradeRoutes.contains(locations.get(t))){  //and check if it is a trade route.
             stroke(190, 90, 70, 255);  //if it is, then use these display colours.
