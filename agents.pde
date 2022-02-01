@@ -13,6 +13,8 @@ String[] names = {
 String createdName = "";
 PVector locPos;
 
+boolean firstSingleRender = true;
+
 String mode = "MAP";
 float increment = 0.02;
 Location selectedLocation;
@@ -36,7 +38,7 @@ void setup() {
   for (int i = 0; i < initalLocationSize; i++) {
     int p = round(random(500, 1200));
     boolean isTown;
-    if (p < 700) {
+    if (p < 800) {
        isTown = true;
     } else {
       isTown = false;
@@ -46,6 +48,7 @@ void setup() {
   
   //generate trade routes
   for (int i = 0; i < locations.size(); i++) {
+    
     locations.get(i).setTradeRoutes(generateRoutes(locations, locations.get(i), 500));
     locations.get(i).setConnections(generateRoutes(locations, locations.get(i), 750));
     locations.get(i).setSailRoute(findSailRoute(locations.get(i)));
@@ -60,6 +63,8 @@ void setup() {
         Trader t = new Trader(locations.get(i).name + " Trader", locations.get(i));
         people.add(t);
         locations.get(i).assign_person(t);
+        locations.get(i).traders.add(t);
+        locations.get(i).natives.add(t);
       }
     }
     
@@ -68,12 +73,17 @@ void setup() {
         Traveller tv = new Traveller(locations.get(i).name + " Traveller", locations.get(i));
         people.add(tv);
         locations.get(i).assign_person(tv);
+        locations.get(i).travellers.add(tv);
+        locations.get(i).natives.add(tv);
       }
     }
     
     Sailor s = new Sailor(locations.get(i).name + " Sailor", locations.get(i));
     people.add(s);
     locations.get(i).assign_person(s);
+    locations.get(i).sailor = s;
+    
+    locations.get(i).natives.add(s);
     
   }
 }
@@ -106,19 +116,62 @@ void draw() {
     }
     
   } else if (mode == "SINGLE") {
-    PVector center = new PVector(width / 2, height / 2);
+    PVector center = new PVector(width / 2, 175);
+    
     for (int i = 0; i < people.size(); i++) {
     if (people.get(i).isTransferring) {
       people.get(i).displayTransfer(false);
      }
     }
+    
+    textSize(40);
+    textAlign(CENTER);
+    text(selectedLocation.name, width / 2, 40);
+    
+    textSize(24);
+    textAlign(CENTER);
+    text("Transferring", width - 500, 400);
+    
     selectedLocation.setRenderPosition(center);
-    selectedLocation.setRenderSize(100);
-    selectedLocation.display(true, false, false, false, false, false);
-    selectedLocation.displayTradeRoutes();
-    for (int i = 0; i < selectedLocation.current_people.size(); i++){
-      PVector render_position = new PVector(int(center.x + 75) , int(center.y - 40) + (i * 24));
-      selectedLocation.displayPerson(render_position, 20, i);
+    selectedLocation.setRenderSize(110);
+    selectedLocation.display(false, false, false, false, false, false);
+    
+    int newLine = -1;
+    int m = 90;
+    for (int i = 0; i < locations.size(); i++){
+      
+      PVector pos;
+      if (400 + (i * m) > height - 100){
+        newLine += 1;
+        pos = new PVector(400, 400 + (newLine * m));
+      } else {
+        pos = new PVector(100, 400 + (i * m));
+      }
+      
+      locations.get(i).setRenderPosition(pos);
+      locations.get(i).setRenderSize(64);
+      locations.get(i).display(true, false, false, false, true, false);
+      
+      int transferCount = -1;
+      for(int j = 0; j < selectedLocation.natives.size(); j++){
+        if (selectedLocation.natives.get(j).isTransferring){
+          transferCount++;
+          PVector position = new PVector(width - 500, 525 - (transferCount * 24));
+          selectedLocation.natives.get(j).display(position, 20);
+        }
+      }
+      
+      int personCount = -1;
+      for(int k = 0; k < locations.get(i).current_people.size(); k++){
+        if(selectedLocation.natives.contains(locations.get(i).current_people.get(k))){
+          personCount++;
+          Person currentNative = locations.get(i).current_people.get(k);
+          float x = currentNative.p_location.getCoords().x;
+          float y = currentNative.p_location.getCoords().y;
+          PVector renderPosition = new PVector(x + 64, y + (personCount * 24));
+          currentNative.display(renderPosition, 16);
+        }
+      }
     }
     
     
