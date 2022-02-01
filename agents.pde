@@ -87,15 +87,17 @@ void draw() {
   }
 
   background(69, 71, 57);
+  
+  
+  
   if (mode == "MAP") {
-
     drawLines();
     for (int i = 0; i < people.size(); i++) {
-      if (people.get(i).isTransferring) {
-        people.get(i).displayTransfer();
+    if (people.get(i).isTransferring) {
+      people.get(i).displayTransfer(true);
 
-      }
     }
+  }
     
     for (int i = 0; i < locations.size(); i++) {
       locations.get(i).setRenderPosition(locations.get(i).position);
@@ -105,9 +107,14 @@ void draw() {
     
   } else if (mode == "SINGLE") {
     PVector center = new PVector(width / 2, height / 2);
+    for (int i = 0; i < people.size(); i++) {
+    if (people.get(i).isTransferring) {
+      people.get(i).displayTransfer(false);
+     }
+    }
     selectedLocation.setRenderPosition(center);
     selectedLocation.setRenderSize(100);
-    selectedLocation.display(true, true, false, false, false, false);
+    selectedLocation.display(true, false, false, false, false, false);
     selectedLocation.displayTradeRoutes();
     for (int i = 0; i < selectedLocation.current_people.size(); i++){
       PVector render_position = new PVector(int(center.x + 75) , int(center.y - 40) + (i * 24));

@@ -62,7 +62,7 @@ class Person {
     newLocation = tempnewLocation;
   }
   
-  void displayTransfer() {
+  void displayTransfer(boolean displayOnScreen) {
     int size = 8;
     PVector circlePos = new PVector(oldLocation.position.x, oldLocation.position.y);
     transferProgress += increment;
@@ -73,19 +73,20 @@ class Person {
     circlePos.x = lerp(oldX, newLocation.position.x, transferProgress);
     circlePos.y = lerp(oldY, newLocation.position.y, transferProgress);
     
-    ellipseMode(CENTER);
-    stroke(75);
-    if ((oldLocation.checkIfMouseOver()) || (newLocation.checkIfMouseOver())) {
-      stroke(10);
-      strokeWeight(0.5);
-      fill(displaycolour);
-      size = 10;
-    } else {
-      fill(displaycolour + color(10, 10, 10, 40));
+    if(displayOnScreen){
+      ellipseMode(CENTER);
+      stroke(75);
+      if ((oldLocation.checkIfMouseOver()) || (newLocation.checkIfMouseOver())) {
+        stroke(10);
+        strokeWeight(0.5);
+        fill(displaycolour);
+        size = 10;
+      } else {
+        fill(displaycolour + color(10, 10, 10, 40));
+      }
+      
+      ellipse(circlePos.x, circlePos.y, size, size);
     }
-    
-    ellipse(circlePos.x, circlePos.y, size, size);
-    
     if (transferProgress >= 1 - increment) {
       isTransferring = false;
       if (newLocation.exists) {
