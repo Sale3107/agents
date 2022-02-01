@@ -100,14 +100,14 @@ void draw() {
     for (int i = 0; i < locations.size(); i++) {
       locations.get(i).setRenderPosition(locations.get(i).position);
       locations.get(i).setRenderSize(45);
-      locations.get(i).display(true, true, true, true, true);
+      locations.get(i).display(true, true, true, true, true, false);
     }
     
   } else if (mode == "SINGLE") {
     PVector center = new PVector(width / 2, height / 2);
     selectedLocation.setRenderPosition(center);
     selectedLocation.setRenderSize(100);
-    selectedLocation.display(true, false, false, false, false);
+    selectedLocation.display(true, true, false, false, false, false);
     selectedLocation.displayTradeRoutes();
     for (int i = 0; i < selectedLocation.current_people.size(); i++){
       PVector render_position = new PVector(int(center.x + 75) , int(center.y - 40) + (i * 24));
@@ -123,7 +123,7 @@ void draw() {
       line(mouseX, mouseY, locations.get(i).position.x, locations.get(i).position.y);
       locations.get(i).setRenderPosition(locations.get(i).position);
       locations.get(i).setRenderSize(45);
-      locations.get(i).display(true, true, true, true, true);
+      locations.get(i).display(true, true, true, true, true, false);
     }
     
     ellipseMode(CENTER);
@@ -143,7 +143,7 @@ void draw() {
       line(locPos.x, locPos.y, locations.get(i).position.x, locations.get(i).position.y);
       locations.get(i).setRenderPosition(locations.get(i).position);
       locations.get(i).setRenderSize(45);
-      locations.get(i).display(true, true, true, true, true);
+      locations.get(i).display(true, true, true, true, true, false);
     }
     
     fill(140, 150, 145, 220);
@@ -155,6 +155,17 @@ void draw() {
     textSize(25);
     text(createdName, locPos.x, locPos.y + 30);
     
+  } else if (mode == "AGENT"){
+      int count = 0;
+      for (int i = 0; i < people.size(); i++){
+        if (people.get(i) instanceof Traveller){
+          count++;
+          PVector renderPos = new PVector(100, 100 + (count * 40));
+          people.get(i).display(renderPos, 25);
+          textSize(24);
+          text(people.get(i).getCycleStage(), renderPos.x + 500, renderPos.y);
+        }
+      }
   }
 }
 
@@ -184,6 +195,8 @@ void mouseClicked() {
     createNewLocation(locPos, createdName);
     createdName = "";
     mode = "MAP";
+  } else if (mode == "AGENT"){
+    
   }
 }
 
