@@ -16,6 +16,12 @@ class Location {
   ArrayList<Location> connections = new ArrayList<Location>();
   Location sailRoute;
   
+  ArrayList<Trader> traders = new ArrayList<Trader>();
+  ArrayList<Traveller> travellers = new ArrayList<Traveller>();
+  Sailor sailor;
+  
+  ArrayList<Person> natives = new ArrayList<Person>();
+  
   boolean exists = true;
   
   Location (String tempname, PVector temppos, int temppopulation, int initialwealth, boolean t_isTown) {
@@ -31,6 +37,18 @@ class Location {
     
     innerColour = color(int(random(40, 190)), int(random(80, 150)), int(random(20, 140)));
     
+  }
+  
+  void setTraders(ArrayList<Trader> _traders){
+    traders = _traders;
+  }
+  
+  void setTravellers(ArrayList<Traveller> _travellers){
+    travellers = _travellers;
+  }
+  
+  void setSailor(Sailor _sailor){
+    sailor = _sailor;
   }
   
   void setTradeRoutes(ArrayList<Location> temp_traders) {
@@ -57,8 +75,8 @@ class Location {
     return name;
   }
   
-  PVector coordinates() {
-    return position;
+  PVector getCoords() {
+    return renderPosition;
   }
   
   void setRenderPosition(PVector _renderPosition){
