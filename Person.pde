@@ -11,12 +11,17 @@ class Person {
   float transferProgress;
   float increment = 0.02;
   int queueNumber;
+  int cycleStage;
   
   Person (String tempname) {
   
     name = tempname;
     displaycolour = color(240, 245, 246);
     
+  }
+  
+  int getCycleStage(){
+    return cycleStage;
   }
   
   int getRC(int r1, int r2) {
