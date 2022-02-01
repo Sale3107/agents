@@ -69,10 +69,14 @@ class Location {
     renderSize = _size;
   }
   
+  
+  
   void display(boolean showName,
               boolean showTradeRoutes, boolean showPopulation,
-              boolean showWealth, boolean checkMouse){
+              boolean showWealth, boolean checkMouse, boolean showConnections){
     
+                
+     
     /**
     * Generic display method for a Location.
     * @param renderPos This is a PVectore where the Location will be.
@@ -82,6 +86,7 @@ class Location {
     * @param showPopulation This determines whether to render the population text or not.
     * @param showWealth This determines whether to render the wealth text or not.
     * @param checkMouse This determines whether the location's appearance will be affected by the mouse position.
+    * @param showConnections This determines whether the list of connections is rendered or not.
     * @return Displays the location as a square or circle on screen at specified coordinates.
     */
     
@@ -147,12 +152,25 @@ class Location {
     if(showTradeRoutes){
       //Display trade routes as text.
       for (int i = 0; i < tradeRoutes.size(); i++) {
-        Location current_trader = tradeRoutes.get(i);
+        Location current_tradeRoute = tradeRoutes.get(i);
         fill(180);
         textSize(10);
-        text(current_trader.name, renderPosition.x, renderPosition.y + 45 + (i * 10));
+        text(current_tradeRoute.name, renderPosition.x, renderPosition.y + 45 + (i * 10));
       }
     }
+    
+    
+    if(showConnections){
+      for (int i = 0; i < connections.size(); i++) {
+        Location current_connect = connections.get(i);
+        fill(200, 200, 100);
+        textSize(10);
+        text(current_connect.name, renderPosition.x, renderPosition.y + 90 + (i * 10));
+      }
+    }
+    
+    
+    
   }
   
 
@@ -164,7 +182,7 @@ class Location {
       PVector render_position = new PVector(int((width / 2) - 150) , int((height / 2) - 75) + (i * 55));
       active_loc.setRenderPosition(render_position);
       active_loc.setRenderSize(35);
-      active_loc.display(true, false, false, false, true);
+      active_loc.display(true, false, false, false, true, false);
     }
   }
   
