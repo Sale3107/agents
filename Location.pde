@@ -133,7 +133,7 @@ class Location {
       //Name Text:
       textAlign(CENTER);
       textSize(12);
-      text(name, renderPosition.x, renderPosition.y + (renderSize - (renderSize / 4)));
+      text(name, renderPosition.x, renderPosition.y + (renderSize - (renderSize / 4.1)));
     }
     
     if(showPopulation){
